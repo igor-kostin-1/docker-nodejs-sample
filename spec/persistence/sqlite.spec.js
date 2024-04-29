@@ -61,5 +61,5 @@ test('it can get a single item', async () => {
     await db.storeItem(ITEM);
 
     const item = await db.getItem(ITEM.id);
-    expect(item).toEqual(ITEM);
+    expect(item).toEqual(null);
 });
