@@ -31,6 +31,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRESDB_ROOT_PASSWORD}
       - POSTGRES_DB=${POSTGRESDB_DATABASE}
 
+
 volumes:
   db:
     driver: local
