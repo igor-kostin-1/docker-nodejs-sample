@@ -2,10 +2,11 @@ version: '3.8'
 
 services:
   node-app:
+    image: 'ghcr.io/igor-kostin-1/docker-nodejs-sample'
     build:
-      context: .
-      dockerfile: Dockerfile
-      target: ${TARGET}
+#      context: .
+#      dockerfile: Dockerfile
+#      target: ${TARGET}
       args:
         DB_HOST: 'psql-db'
         DB_USER: ${POSTGRESDB_USER}
