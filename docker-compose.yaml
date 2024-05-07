@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   node-app:
-    image: 'ghcr.io/igor-kostin-1/docker-nodejs-sample'
+    image: 'ghcr.io/igor-kostin-1/docker-nodejs-sample:latest'
     build:
 #      context: .
 #      dockerfile: Dockerfile
