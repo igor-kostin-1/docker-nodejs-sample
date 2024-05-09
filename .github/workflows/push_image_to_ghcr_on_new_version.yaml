@@ -13,7 +13,7 @@ on:
         required: true
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - '${{ env.VERSION_EXPRESSION }}'
 
 jobs:
   build-and-push-image:
@@ -43,7 +43,7 @@ jobs:
       - name: Determine Docker tag
         id: determine_tag
         run: |
-            if [[ "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            if [[ "${{ github.ref_name }}" =~ ^${{ env.VERSION_EXPRESSION }}$ ]]; then
               echo "::set-output name=tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}"
               echo "Using push tag version: ${{ github.ref_name }}"
             elif [[ "${{ github.event.inputs.version }}" =~ ^${{ env.VERSION_EXPRESSION }}$ ]]; then
