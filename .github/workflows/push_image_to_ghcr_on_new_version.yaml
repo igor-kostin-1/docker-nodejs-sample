@@ -61,4 +61,4 @@ jobs:
             ${{ steps.determine_tag.outputs.tag}}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
-          
+
