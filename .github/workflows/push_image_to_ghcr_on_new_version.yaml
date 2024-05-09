@@ -39,7 +39,6 @@ jobs:
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
       - name: Determine Docker tag
         id: determine_tag
         run: |
@@ -62,4 +61,3 @@ jobs:
             ${{ steps.determine_tag.outputs.tag}}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
-
