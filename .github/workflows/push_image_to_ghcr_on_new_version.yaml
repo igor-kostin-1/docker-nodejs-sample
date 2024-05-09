@@ -49,7 +49,7 @@ jobs:
             elif [[ "${{ github.event.inputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
               echo "::set-output name=tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}"
               echo "Using input version : ${{ github.event.inputs.version }}"
-            else:
+            else
               echo "Neither tag version nor input versions are available"
             fi
 
