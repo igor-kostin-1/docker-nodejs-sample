@@ -3,7 +3,7 @@ name: Docker Image CI for GHCR
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  VERSION_EXPRESSION: ^(v|V)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+  VERSION_EXPRESSION: ^[vV][0-9]+.[0-9]+.[0-9]+*$
 on:
   workflow_dispatch:
     inputs:
