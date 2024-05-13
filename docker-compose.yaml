@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  node-app:
+    image: 'ghcr.io/igor-kostin-1/docker-nodejs-sample:latest'
+    environment:
+      - POSTGRES_HOST=psql-db
+      - POSTGRES_USER=${POSTGRESDB_USER}
+      - POSTGRES_PASSWORD=${POSTGRESDB_ROOT_PASSWORD}
+      - POSTGRES_DB=${POSTGRESDB_DATABASE}
+#    build:
+#      args:
+#        DB_HOST: 'psql-db'
+#        DB_USER: ${POSTGRESDB_USER}
+#        DB_PASSWORD: ${POSTGRESDB_ROOT_PASSWORD}
+#        DB_DB: ${POSTGRESDB_DATABASE}
+    ports:
+      - "3000:3000"
+    env_file: ./.env
+    depends_on:
+      - psql-db
+
+  psql-db:
+    image: postgres:14-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=${POSTGRESDB_USER}
+      - POSTGRES_PASSWORD=${POSTGRESDB_ROOT_PASSWORD}
+      - POSTGRES_DB=${POSTGRESDB_DATABASE}
+
+volumes:
+  db:
+    driver: local
