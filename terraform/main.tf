@@ -87,7 +87,6 @@ module "public_subnet_cider_blocks" {
 }
 
 locals {
-
   subnets = {
     public_subnet_cider = [for k, v in module.public_subnet_cider_blocks.network_cidr_blocks : v if can(regex("^${local.subnet_prefix_name.public}.*", k))]
     public_subnet_name  = [for k, v in module.public_subnet_cider_blocks.network_cidr_blocks : k if can(regex("^${local.subnet_prefix_name.public}.*", k))]
@@ -135,8 +134,9 @@ module "vpc" {
   create_database_nat_gateway_route = false
   create_database_subnet_route_table = false
 
-  create_igw = true
+  create_igw = true # Explicitly specifying usage of internet gateway
 
+  # Configure Tags(Name) for resources
   igw_tags = { Name = "IGW_${var.owner_code_name}_${var.vpc_version}" }
   private_route_table_tags = { Name = "private_RT_${var.owner_code_name}_${var.vpc_version}" }
   public_route_table_tags = { Name = "public_RT_${var.owner_code_name}_${var.vpc_version}"}
