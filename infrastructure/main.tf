@@ -16,6 +16,7 @@ provider "aws" {
       Owner = "Igor Kostin"
     }
   }
+  #   region = "eu-central-1"
 }
 
 module "vpc" {
@@ -24,5 +25,6 @@ module "vpc" {
   vcp_base_cider_block = var.vpc_cidr_block
 }
 
-
-
+module "iam" {
+  source = "./module/iam"
+}

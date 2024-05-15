@@ -49,7 +49,7 @@ module "subnet_cider_blocks" {
 resource "aws_eip" "nat_gateway" {
   domain = "vpc"
   tags = {
-    Name = "EIP_vpc_nat_gateway_igork_01"
+    Name = "EIP_vpc_nat_gateway"
   }
 }
 
