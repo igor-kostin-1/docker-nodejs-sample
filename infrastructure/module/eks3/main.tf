@@ -18,6 +18,9 @@ module "eks" {
     coredns = {
       most_recent = true
     }
+    aws-ebs-csi-driver = {
+      most_recent = true
+    }
   }
   create_iam_role = true
 
