@@ -10,7 +10,6 @@ module "acm" {
   wait_for_validation = false
 
   tags = {
-    Name = "my-domain.com"
-
+    Name = "igor-kostin.omega.devops.sitesstage.com"
   }
 }
