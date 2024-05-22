@@ -30,8 +30,6 @@ module "eks" {
   authentication_mode                      = "API"
   enable_cluster_creator_admin_permissions = true
 
-  enable_irsa = true
-
   eks_managed_node_group_defaults = {
     disk_size     = 50,
     instance_type = ["t3.small"]
