@@ -10,6 +10,7 @@ module "acm" {
   wait_for_validation = false
 
   tags = {
-    Name = "igor-kostin.omega.devops.sitesstage.com"
+    Name = "igor-kostin.omega.devops.sitesstage.com",
+    Owner = "Igor Kostin"
   }
 }
