@@ -3,12 +3,12 @@ module "ebs_csi_iam_role" {
 
   role_name = "AmazonEKS_EBS_CSI_DriverRole_igork"
 
-  role_policy_arns = {AmazonEBSCSIDriverPolicy:"arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"}
+  attach_ebs_csi_policy = true
 
   oidc_providers = {
     main = {
       provider_arn               = module.eks.oidc_provider_arn
-      namespace_service_accounts = ["system:serviceaccount:kube-system:ebs-csi-controller"]
+      namespace_service_accounts = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
     }
   }
 }
