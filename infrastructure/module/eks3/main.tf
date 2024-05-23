@@ -20,7 +20,7 @@ module "eks" {
     }
     aws-ebs-csi-driver = {
       most_recent = true
-      service_account_role_arn = module.lb_role.iam_role_arn
+      service_account_role_arn = module.ebs_csi_iam_role.iam_role_arn
     }
   }
   create_iam_role = true
@@ -64,4 +64,6 @@ module "eks" {
       }
     }
   }
+
+
 }
