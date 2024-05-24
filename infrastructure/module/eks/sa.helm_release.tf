@@ -2,7 +2,7 @@ resource "helm_release" "alb-controller" {
   name       = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  namespace  = "kube-system-igork"
+  namespace  = "load-balancer"
 
   create_namespace = true
 

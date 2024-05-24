@@ -29,7 +29,6 @@ module "eks" {
 
   vpc_id                   = var.vpc_id
   subnet_ids               = var.node_subnets_id
-#   control_plane_subnet_ids = var.control_subnets_id
 
   authentication_mode                      = "API"
   enable_cluster_creator_admin_permissions = true
