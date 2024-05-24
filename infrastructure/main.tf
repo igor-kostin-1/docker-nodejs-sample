@@ -9,10 +9,13 @@ module "iam" {
 }
 
 module "eks" {
-  source = "./module/eks3"
+  source = "./module/eks"
 
   node_subnets_id = module.vpc.private_subnets
   control_subnets_id = module.vpc.private_subnets
   vpc_id = module.vpc.id
 }
 
+module "pv-pvc" {
+  source = "./module/pv-pvc"
+}
