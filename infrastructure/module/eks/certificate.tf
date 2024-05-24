@@ -3,8 +3,7 @@ module "acm" {
   version = "~> 4.0"
 
   domain_name  = "igor-kostin.omega.devops.sitesstage.com"
-  zone_id      = "Z07475403IQFN5IUZ6XJ9"
-
+  zone_id      = data.aws_route53_zone.zone.id
   validation_method = "DNS"
 
   wait_for_validation = false
