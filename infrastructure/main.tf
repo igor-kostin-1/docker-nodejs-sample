@@ -15,7 +15,3 @@ module "eks" {
   control_subnets_id = module.vpc.private_subnets
   vpc_id = module.vpc.id
 }
-
-module "pv-pvc" {
-  source = "./module/pv-pvc"
-}
