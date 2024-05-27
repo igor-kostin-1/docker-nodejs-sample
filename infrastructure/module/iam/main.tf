@@ -1,3 +1,4 @@
+
 module "iam_github_oidc_provider" {
   source = "terraform-aws-modules/iam/aws//modules/iam-github-oidc-provider"
 }
@@ -23,6 +24,16 @@ module "iam_policy" {
                 "ecr:PutImage"
             ],
             "Resource": "*"
+        },
+        {
+            "Effect" : "Allow",
+            "Action" : [
+              "eks:DescribeCluster",
+              "eks:ListClusters",
+              "eks:AccessKubernetesApi",
+              "sts:AssumeRole"
+            ],
+            "Resource" : "*"
         }
     ]
   }

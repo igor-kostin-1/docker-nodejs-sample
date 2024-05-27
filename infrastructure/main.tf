@@ -1,24 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-
-  required_version = ">= 1.0.0"
-}
-
-provider "aws" {
-  profile = "igork_aws"
-  default_tags {
-    tags = {
-      Owner = "Igor Kostin"
-    }
-  }
-  #   region = "eu-central-1"
-}
-
 module "vpc" {
   source = "./module/vpc"
 
@@ -27,4 +6,12 @@ module "vpc" {
 
 module "iam" {
   source = "./module/iam"
+}
+
+module "eks" {
+  source = "./module/eks"
+
+  node_subnets_id = module.vpc.private_subnets
+  control_subnets_id = module.vpc.private_subnets
+  vpc_id = module.vpc.id
 }

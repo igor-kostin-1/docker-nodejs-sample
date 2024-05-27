@@ -66,7 +66,7 @@ module "vpc" {
 
   create_database_subnet_group = true
 
-  azs            = data.aws_availability_zones.available.names
+  azs = data.aws_availability_zones.available.names
 
   public_subnets = [
     lookup(module.subnet_cider_blocks.network_cidr_blocks, "public_subnet_igork_1a"),
@@ -98,5 +98,15 @@ module "vpc" {
   private_route_table_tags = { Name = "private_RT_igork" }
   public_route_table_tags = { Name = "public_RT_igork" }
   nat_gateway_tags = { Name = "NAT_GW_igork" }
+
+
+  public_subnet_tags = { "kubernetes.io/role/elb" = 1 }
+  private_subnet_tags = { "kubernetes.io/role/internal-elb" = 1 }
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+
 
 }
