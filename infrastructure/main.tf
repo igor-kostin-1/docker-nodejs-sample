@@ -19,4 +19,10 @@ module "psql" {
   source = "./module/database"
 
   eks_cluster_name = module.eks.eks_cluster_name
+
+  password = var.db_password // secret db password is passed as evn
+}
+
+output "o" {
+  value = module.psql.secret_string
 }
