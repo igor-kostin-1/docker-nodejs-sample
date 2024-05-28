@@ -10,10 +10,6 @@ locals {
   secret_data = jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\"")))
 }
 
-output "secret_string" {
-  value = nonsensitive(local.secret_data)
-}
-
 resource "helm_release" "psql" {
   name       = "psql-database"
   repository = "https://charts.bitnami.com/bitnami"

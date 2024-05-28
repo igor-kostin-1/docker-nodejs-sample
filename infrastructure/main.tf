@@ -22,7 +22,3 @@ module "psql" {
 
   password = var.db_password // secret db password is passed as evn
 }
-
-output "o" {
-  value = module.psql.secret_string
-}
