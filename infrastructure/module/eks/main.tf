@@ -9,15 +9,6 @@ module "eks" {
   cluster_endpoint_private_access = true
 
   cluster_addons = {
-    kube-proxy = {
-      most_recent = true
-    }
-    vpc-cni = {
-      most_recent = true
-    }
-    coredns = {
-      most_recent = true
-    }
     aws-ebs-csi-driver = {
       most_recent = true
       service_account_role_arn = module.ebs_csi_iam_role.iam_role_arn
