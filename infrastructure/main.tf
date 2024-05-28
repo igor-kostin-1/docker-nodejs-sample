@@ -12,6 +12,11 @@ module "eks" {
   source = "./module/eks"
 
   node_subnets_id = module.vpc.private_subnets
-  control_subnets_id = module.vpc.private_subnets
   vpc_id = module.vpc.id
+}
+
+module "psql" {
+  source = "./module/database"
+
+  eks_cluster_name = module.eks.eks_cluster_name
 }
