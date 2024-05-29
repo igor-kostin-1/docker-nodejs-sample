@@ -23,12 +23,12 @@ module "secrets-manager" {
       resources = ["*"]
     }
   }
-
+  ignore_secret_changes = true
   secret_string = jsonencode({
-    username = "vegaItTrainingUser"
-    password = var.password // secret db password is passed as evn, other values could be to
-    database = "db",
-    port     = 5432
+    username = ""
+    password = ""
+    database = "",
+    port     = ""
   })
 }
 
