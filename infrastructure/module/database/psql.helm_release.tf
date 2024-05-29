@@ -46,22 +46,22 @@ resource "helm_release" "psql" {
     value = "8Gi"
   }
 
-  set {
+  set_sensitive {
     name  = "auth.username"
     value = lookup(local.secret_data, "username", "user")
   }
 
-  set {
+  set_sensitive {
     name  = "auth.password"
     value = lookup(local.secret_data, "password", "password")
   }
 
-  set {
+  set_sensitive {
     name  = "auth.database"
     value = lookup(local.secret_data, "database", "db")
   }
 
-  set {
+  set_sensitive {
     name  = "primary.service.ports.postgresql"
     value = lookup(local.secret_data, "port", 5432)
   }
