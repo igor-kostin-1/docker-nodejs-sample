@@ -19,6 +19,8 @@ resource "helm_release" "psql" {
 
   count = 1
 
+  create_namespace = true
+
   set {
     name  = "serviceAccount.create"
     value = false
@@ -46,12 +48,12 @@ resource "helm_release" "psql" {
 
   set {
     name  = "auth.username"
-    value = lookup(local.secret_data, "username", "user") //kubernetes_config_map.example.data.POSTGRESQL_USERNAME
+    value = lookup(local.secret_data, "username", "user")
   }
 
   set {
     name  = "auth.password"
-    value = lookup(local.secret_data, "password", "password") //kubernetes_secret.example.data.POSTGRESQL_PASSWORD
+    value = lookup(local.secret_data, "password", "password")
   }
 
   set {
@@ -61,7 +63,6 @@ resource "helm_release" "psql" {
 
   set {
     name  = "primary.service.ports.postgresql"
-    value = lookup(local.secret_data, "port", 5432) //kubernetes_config_map.example.data.POSTGRESQL_PORT_NUMBER
+    value = lookup(local.secret_data, "port", 5432)
   }
-
 }
