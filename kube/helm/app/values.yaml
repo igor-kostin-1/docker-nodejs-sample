@@ -1,0 +1,15 @@
+postgresql:
+  host: psql-database-postgresql
+  port: 5432
+  user: vegaItTrainingUser
+  password: P4ssw0rd
+  database: db
+
+image:
+  repository: ghcr.io/igor-kostin-1/docker-nodejs-sample
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
