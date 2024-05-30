@@ -1,3 +1,4 @@
 node_modules/
 db/
 compose.yaml
+/kube/helm/app/_values.yaml
