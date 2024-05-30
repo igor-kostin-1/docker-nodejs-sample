@@ -49,16 +49,16 @@ resource "helm_release" "psql" {
 
   set_sensitive {
     name  = "auth.password"
-    value = lookup(jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "password", "password")
+    value = lookup(jsondecode(sensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "password", "password")
   }
 
   set_sensitive {
     name  = "auth.database"
-    value = lookup(jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "database", "db")
+    value = lookup(jsondecode(sensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "database", "db")
   }
 
   set_sensitive {
     name  = "primary.service.ports.postgresql"
-    value = lookup(jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "port", 5432)
+    value = lookup(jsondecode(sensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "port", 5432)
   }
 }
