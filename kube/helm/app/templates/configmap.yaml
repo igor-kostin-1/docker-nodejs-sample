@@ -5,5 +5,4 @@ metadata:
 data:
   POSTGRES_HOST: "{{ .Values.postgresql.host }}"
   POSTGRES_USER: "{{ .Values.postgresql.user }}"
-  POSTGRES_PASSWORD: "{{ .Values.postgresql.password }}"
   POSTGRES_DB: "{{ .Values.postgresql.database }}"
