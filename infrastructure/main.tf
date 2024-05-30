@@ -20,3 +20,7 @@ module "psql" {
 
   eks_cluster_name = module.eks.eks_cluster_name
 }
+
+module "dns" {
+  source = "./module/dns"
+}

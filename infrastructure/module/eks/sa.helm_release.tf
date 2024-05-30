@@ -35,4 +35,14 @@ resource "helm_release" "alb-controller" {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = module.lb_role.iam_role_arn
   }
+
+  set {
+    name  = "webhookTLS.cert"
+    value = module.acm.acm_certificate_arn
+  }
+
+  set {
+    name  = "cluster.dnsDomain"
+    value = "igor-kostin.omega.devops.sitesstage.com"
+  }
 }
