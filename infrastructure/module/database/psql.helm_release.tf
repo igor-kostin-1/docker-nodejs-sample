@@ -6,10 +6,6 @@ data "aws_secretsmanager_secret_version" "current" {
   secret_id = data.aws_secretsmanager_secret.psql_db.id
 }
 
-locals {
-  secret_data = jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\"")))
-}
-
 resource "helm_release" "psql" {
   name       = "psql-database"
   repository = "https://charts.bitnami.com/bitnami"
@@ -48,21 +44,21 @@ resource "helm_release" "psql" {
 
   set_sensitive {
     name  = "auth.username"
-    value = lookup(local.secret_data, "username", "user")
+    value = lookup(jsondecode(sensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "username", "user")
   }
 
   set_sensitive {
     name  = "auth.password"
-    value = lookup(local.secret_data, "password", "password")
+    value = lookup(jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "password", "password")
   }
 
   set_sensitive {
     name  = "auth.database"
-    value = lookup(local.secret_data, "database", "db")
+    value = lookup(jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "database", "db")
   }
 
   set_sensitive {
     name  = "primary.service.ports.postgresql"
-    value = lookup(local.secret_data, "port", 5432)
+    value = lookup(jsondecode(nonsensitive(trim(data.aws_secretsmanager_secret_version.current.secret_string, "\""))), "port", 5432)
   }
 }
