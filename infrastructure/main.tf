@@ -11,6 +11,7 @@ module "iam" {
 module "eks" {
   source = "./module/eks"
 
+  region = "eu-central-1"
   hosted_zone_name = "omega.devops.sitesstage.com"
   node_subnets_id  = module.vpc.private_subnets
   vpc_id           = module.vpc.id
@@ -28,8 +29,8 @@ module "app" {
 }
 
 module "dns" {
+  depends_on = [module.app]
   source = "./module/dns"
 
-  created = module.app
   hosted_zone_name   = "omega.devops.sitesstage.com"
 }

@@ -7,6 +7,21 @@ resource "helm_release" "alb-controller" {
   create_namespace = true
 
   set {
+    name  = "replicaCount"
+    value = "1"
+  }
+
+  set {
+    name  = "defaultTargetType"
+    value = "ip"
+  }
+
+  set {
+    name  = "region"
+    value = var.region
+  }
+
+  set {
     name  = "clusterName"
     value = module.eks.cluster_name
   }
@@ -32,7 +47,7 @@ resource "helm_release" "alb-controller" {
   }
 
   set {
-    name  = "webhookTLS.cert"
-    value = module.acm.acm_certificate_arn
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = module.lb_role.iam_role_arn
   }
 }

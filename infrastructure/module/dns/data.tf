@@ -4,7 +4,6 @@ data "aws_route53_zone" "zone" {
 }
 
 data "aws_lb" "app_alb"{
-  depends_on = [var.created]
   tags = {
     "elbv2.k8s.aws/cluster" : "igork-cluster",
     "ingress.k8s.aws/resource" : "LoadBalancer",
