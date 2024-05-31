@@ -16,6 +16,9 @@ jobs:
   build-push-image-to-ecr:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
