@@ -47,9 +47,8 @@ jobs:
           if [[ "${{ github.ref_name }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
             echo "::set-output name=tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}"
             echo "Using push tag version: ${{ github.ref_name }}"
-          # elif [[ "${{ github.event.inputs.version }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
-          #   echo "::set-output name=tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }}"
-          #   echo "Using input version : ${{ github.event.inputs.version }}"
+          elif [[ true ]]; then
+            echo "Using input version : latest"
           else
             echo "Neither tag version nor input versions are available"
           fi
