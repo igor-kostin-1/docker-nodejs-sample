@@ -50,10 +50,10 @@ jobs:
         id: determine_tag
         run: |
           if [[ "${{ github.ref_name }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
-            echo "::set-output name=tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-docker-${{ github.ref_name }}"
+            echo "::set-output name=tag::-docker-${{ github.ref_name }}"
             echo "Using push tag version: ${{ github.ref_name }}"
           elif [[ "${{ github.event.inputs.version }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
-            echo "::set-output name=tag::${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-docker-${{ github.event.inputs.version }}"
+            echo "::set-output name=tag::docker-${{ github.event.inputs.version }}"
             echo "Using input version : ${{ github.event.inputs.version }}"
           else
             echo "Neither tag version nor input versions are available"
@@ -64,7 +64,7 @@ jobs:
         with:
           context: .
           push: true
-          tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
 #            ${{ steps.determine_tag.outputs.tag}}
 #            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
