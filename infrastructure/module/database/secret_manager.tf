@@ -25,6 +25,7 @@ module "secrets-manager" {
   }
   ignore_secret_changes = true
   secret_string = jsonencode({
+    host = ""
     username = ""
     password = ""
     database = "",
