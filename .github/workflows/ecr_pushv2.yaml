@@ -5,6 +5,9 @@ env:
   IMAGE_NAME: ecr-igork-private
   VERSION_EXPRESSION: ^[vV][0-9]+.[0-9]+.[0-9]+$
   AWS_REGION: eu-central-1
+  EKS_CLUSTER_NAME: igork-cluster
+  HELM_CHART_NAME: ecr-igork-private
+
 on:
   workflow_dispatch:
     inputs:
@@ -67,3 +70,15 @@ jobs:
           push: true
           tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update KubeConfig
+        run: |
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region=${{ env.AWS_REGION }}
+
+      - name: Deploy Helm Chart To Amazon EKS Cluster
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
+        run: |
+          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} /kube/helm/app --set=image.tag=${{ steps.determine_tag.outputs.tag}} --set=image.repository=${{ env.REGISTRY }}
+
