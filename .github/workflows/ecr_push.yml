@@ -38,6 +38,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: 68xxxxxxxxxx.dkr.ecr.us-east-1.amazonaws.com/{{YOUR-ECR-REGISTRY}}
