@@ -50,7 +50,7 @@ jobs:
         id: determine_tag
         run: |
           if [[ "${{ github.ref_name }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
-            echo "::set-output name=tag::-docker-${{ github.ref_name }}"
+            echo "::set-output name=tag::docker-${{ github.ref_name }}"
             echo "Using push tag version: ${{ github.ref_name }}"
           elif [[ "${{ github.event.inputs.version }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
             echo "::set-output name=tag::docker-${{ github.event.inputs.version }}"
