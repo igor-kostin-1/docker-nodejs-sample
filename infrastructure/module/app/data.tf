@@ -7,5 +7,3 @@ data "aws_secretsmanager_secret_version" "current" {
 }
 
 data "aws_caller_identity" "current" {}
-
-
