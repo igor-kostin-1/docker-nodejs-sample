@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: {{ .Release.Name }}
   namespace: vegait-training
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: app
+        app: {{ .Release.Name }}
     spec:
       containers:
-        - name: app
+        - name: {{ .Release.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 3000
@@ -22,22 +22,22 @@ spec:
           - name: POSTGRES_HOST
             valueFrom:
               configMapKeyRef:
-                name: db-config
+                name: {{ .Release.Name }}-config
                 key: POSTGRES_HOST
           - name: POSTGRES_USER
             valueFrom:
               configMapKeyRef:
-                name: db-config
+                name: {{ .Release.Name }}-config
                 key: POSTGRES_USER
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: db-secret
+                name: {{ .Release.Name }}-secret
                 key: POSTGRES_PASSWORD
           - name: POSTGRES_DB
             valueFrom:
               configMapKeyRef:
-                name: db-config
+                name: {{ .Release.Name }}-config
                 key: POSTGRES_DB
 
 
