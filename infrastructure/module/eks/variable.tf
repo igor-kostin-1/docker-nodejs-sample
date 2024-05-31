@@ -8,3 +8,8 @@ variable "vpc_id" {
   description = "Subnets Id used for creation of the EKS cluster"
   type = string
 }
+
+variable "hosted_zone_name"{
+  description = "Hosted zone name."
+  type = string
+}

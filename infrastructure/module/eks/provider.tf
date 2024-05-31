@@ -3,10 +3,15 @@ data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_name
 }
 
-
 data "aws_eks_cluster_auth" "default" {
   depends_on = [module.eks]
   name = module.eks.cluster_name
+}
+
+data "aws_caller_identity" "current" {}
+
+data "aws_ecr_authorization_token" "token" {
+  registry_id = data.aws_caller_identity.current.user_id
 }
 
 provider "helm" {
@@ -20,5 +25,11 @@ provider "helm" {
         "eks", "get-token", "--cluster-name", data.aws_eks_cluster.cluster.id,
       ]
     }
+  }
+
+  registry {
+    url      = "oci://${data.aws_caller_identity.current.account_id}.dkr.ecr.eu-central-1.amazonaws.com"
+    username = data.aws_ecr_authorization_token.token.user_name
+    password = data.aws_ecr_authorization_token.token.password
   }
 }
