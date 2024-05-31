@@ -38,4 +38,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: 68xxxxxxxxxx.dkr.ecr.us-east-1.amazonaws.com/{{YOUR-ECR-REGISTRY}}
+          tags: 162340708442.dkr.ecr.us-east-1.amazonaws.com/ecr-igork-private
