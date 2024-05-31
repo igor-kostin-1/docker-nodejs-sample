@@ -7,6 +7,21 @@ resource "helm_release" "alb-controller" {
   create_namespace = true
 
   set {
+    name  = "replicaCount"
+    value = "1"
+  }
+
+  set {
+    name  = "defaultTargetType"
+    value = "ip"
+  }
+
+  set {
+    name  = "region"
+    value = var.region
+  }
+
+  set {
     name  = "clusterName"
     value = module.eks.cluster_name
   }

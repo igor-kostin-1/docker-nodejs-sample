@@ -1,0 +1,15 @@
+postgresql:
+  host:
+  port:
+  user:
+  password:
+  database:
+
+image:
+  repository:
+  tag:
+  pullPolicy:
+
+service:
+  type:
+  port:
