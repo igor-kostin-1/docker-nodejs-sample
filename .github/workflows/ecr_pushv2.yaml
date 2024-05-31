@@ -81,7 +81,7 @@ jobs:
           IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
         run: |
           aws sts get-caller-identity
-          kubectl get svc
+          # kubectl get svc
           helm list
           helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ steps.determine_tag.outputs.tag}} --set=image.repository=${{ env.REGISTRY }}
 
