@@ -80,5 +80,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
         run: |
+          ls
           helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} /kube/helm/app --set=image.tag=${{ steps.determine_tag.outputs.tag}} --set=image.repository=${{ env.REGISTRY }}
 
