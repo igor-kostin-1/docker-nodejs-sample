@@ -11,8 +11,9 @@ module "iam" {
 module "eks" {
   source = "./module/eks"
 
-  node_subnets_id = module.vpc.private_subnets
-  vpc_id = module.vpc.id
+  hosted_zone_name = "omega.devops.sitesstage.com"
+  node_subnets_id  = module.vpc.private_subnets
+  vpc_id           = module.vpc.id
 }
 
 module "psql" {
@@ -21,6 +22,14 @@ module "psql" {
   eks_cluster_name = module.eks.eks_cluster_name
 }
 
+module "app" {
+  source             = "./module/app"
+  secret_manager_arn = module.psql.secret_manager_arn
+}
+
 module "dns" {
   source = "./module/dns"
+
+  created = module.app
+  hosted_zone_name   = "omega.devops.sitesstage.com"
 }
