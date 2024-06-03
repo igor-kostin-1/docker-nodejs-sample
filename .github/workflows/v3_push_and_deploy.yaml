@@ -110,6 +110,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-push-image-to-ecr
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::162340708442:role/GitHubAction-RoleWithActions-igork-01
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Update KubeConfig
         run: |
           aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region=${{ env.AWS_REGION }}
