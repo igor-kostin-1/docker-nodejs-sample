@@ -102,7 +102,7 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ needs.build-and-push-image.outputs.tag }}
+            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
             ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
 
