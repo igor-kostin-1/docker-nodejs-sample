@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: extract-metadata
     outputs:
-      ecr_registry: ${{ env.ECR_REGISTRY }}
+      ecr_registry: ${{ steps.login-ecr.outputs.registry }}
       tag: ${{ needs.extract-metadata.outputs.tag }}
 
     steps:
