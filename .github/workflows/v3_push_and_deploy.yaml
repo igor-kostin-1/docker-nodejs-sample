@@ -59,7 +59,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: extract-metadata
     outputs:
-      ecr_registry: ${{ steps.login-ecr.outputs.registry }}
       tag: ${{ needs.extract-metadata.outputs.tag }}
 
     steps:
@@ -83,6 +82,9 @@ jobs:
           registry: ${{ env.GHCR_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          TOKEN_BASE64=`echo -n ${{ steps.login-ecr.outputs.registry }} | base64 -w 0`
+          echo -n "ECR_REGISTRY=$TOKEN_BASE64" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -104,16 +106,17 @@ jobs:
       - name: Test image tag and repository
         id: test_image_tag_and_repository
         run: |
+          ECR_REGISTRY=`echo -n ${{needs.build-push-image-to-ecr.outputs.ECR_REGISTRY}} | base64 --decode`
           if $[[ "${{ needs.build-push-image-to-ecr.outputs.tag }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
             echo "Invalid image tag '${{ needs.build-push-image-to-ecr.outputs.tag }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
-          elif contains("${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}", '.dkr.ecr.'); then
-            echo "Invalid image registry '${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}'"
+          elif contains("${{ env.ECR_REGISTRY }}", '.dkr.ecr.'); then
+            echo "Invalid image registry '${{  env.ECR_REGISTRY  }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
-          elif contains("${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}", '.amazonaws.com'); then
-            echo "Invalid image registry '${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}'"
+          elif contains("${{  env.ECR_REGISTRY  }}", '.amazonaws.com'); then
+            echo "Invalid image registry '${{  env.ECR_REGISTRY  }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
           else
@@ -141,4 +144,4 @@ jobs:
 
       - name: Deploy Helm Chart To Amazon EKS Cluster
         run: |
-          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.build-push-image-to-ecr.outputs.tag }} --set=image.repository=${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}
+          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.build-push-image-to-ecr.outputs.tag }} --set=image.repository=${{  env.ECR_REGISTRY  }}
