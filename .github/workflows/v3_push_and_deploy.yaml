@@ -1,7 +1,6 @@
 name: V3 Build and Push Docker Image to AWS ECR, GHCR and Deploy to EKS
 
 env:
-  REGISTRY: 162340708442.dkr.ecr.eu-central-1.amazonaws.com
   IMAGE_NAME: ecr-igork-private
   VERSION_EXPRESSION: ^[vV][0-9]+.[0-9]+.[0-9]+$
   AWS_REGION: eu-central-1
@@ -41,7 +40,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}
 
       - name: Determine Docker tag
         id: determine_tag
@@ -74,21 +73,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
-          labels: ${{ needs.extract-metadata.outputs.labels }}
-
-  push-to-ghcr:
-    runs-on: ubuntu-latest
-    needs: extract-metadata
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Login to the Container registry
         uses: docker/login-action@v2
         with:
@@ -97,14 +81,39 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
             ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
             ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ needs.extract-metadata.outputs.labels }}
+#
+#  push-to-ghcr:
+#    runs-on: ubuntu-latest
+#    needs: extract-metadata
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: Login to the Container registry
+#        uses: docker/login-action@v2
+#        with:
+#          registry: ${{ env.GHCR_REGISTRY }}
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+#        with:
+#          context: .
+#          push: true
+#          tags: |
+#            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
+#            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest
+#          labels: ${{ steps.meta.outputs.labels }}
 
   deploy-to-eks:
     runs-on: ubuntu-latest
@@ -127,6 +136,5 @@ jobs:
       - name: Deploy Helm Chart To Amazon EKS Cluster
         env:
           ECR_REGISTRY: ${{ needs.build-push-image-to-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
         run: |
-          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.extract-metadata.outputs.tag }} --set=image.repository=${{ env.REGISTRY }}
+          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.extract-metadata.outputs.tag }} --set=image.repository=${{ env.ECR_REGISTRY }}
