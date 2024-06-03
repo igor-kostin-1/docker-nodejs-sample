@@ -1,84 +1,84 @@
-name: V2 Build and Push Docker Image to AWS ECR
+# name: V2 Build and Push Docker Image to AWS ECR
 
-env:
-  REGISTRY:   162340708442.dkr.ecr.eu-central-1.amazonaws.com
-  IMAGE_NAME: ecr-igork-private
-  VERSION_EXPRESSION: ^[vV][0-9]+.[0-9]+.[0-9]+$
-  AWS_REGION: eu-central-1
-  EKS_CLUSTER_NAME: igork-cluster
-  HELM_CHART_NAME: ecr-igork-private
+# env:
+#   REGISTRY:   162340708442.dkr.ecr.eu-central-1.amazonaws.com
+#   IMAGE_NAME: ecr-igork-private
+#   VERSION_EXPRESSION: ^[vV][0-9]+.[0-9]+.[0-9]+$
+#   AWS_REGION: eu-central-1
+#   EKS_CLUSTER_NAME: igork-cluster
+#   HELM_CHART_NAME: ecr-igork-private
 
-on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Specify the version of the package ( in format v*.*.* )
-        type: string
-        required: true
-  push:
-    tags:
-      - '[vV][0-9]+.[0-9]+.[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+'
-
-
-permissions:
-  id-token: write
-  contents: read
-  packages: write
-
-jobs:
-  build-push-image-to-ecr:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::162340708442:role/GitHubAction-RoleWithActions-igork-01
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       version:
+#         description: Specify the version of the package ( in format v*.*.* )
+#         type: string
+#         required: true
+#   push:
+#     tags:
+#       - '[vV][0-9]+.[0-9]+.[0-9]+'
+#       - '[0-9]+.[0-9]+.[0-9]+'
 
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Determine Docker tag
-        id: determine_tag
-        run: |
-          if [[ "${{ github.ref_name }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
-            echo "::set-output name=tag::docker-${{ github.ref_name }}"
-            echo "Using push tag version: ${{ github.ref_name }}"
-          elif [[ "${{ github.event.inputs.version }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
-            echo "::set-output name=tag::docker-${{ github.event.inputs.version }}"
-            echo "Using input version : ${{ github.event.inputs.version }}"
-          else
-            echo "Neither tag version nor input versions are available"
-          fi
+# permissions:
+#   id-token: write
+#   contents: read
+#   packages: write
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-        with:
-          context: .
-          push: true
-          tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
-          labels: ${{ steps.meta.outputs.labels }}
+# jobs:
+#   build-push-image-to-ecr:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Update KubeConfig
-        run: |
-          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region=${{ env.AWS_REGION }}
+#       - name: configure aws credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           role-to-assume: arn:aws:iam::162340708442:role/GitHubAction-RoleWithActions-igork-01
+#           role-session-name: GitHub_to_AWS_via_FederatedOIDC
+#           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy Helm Chart To Amazon EKS Cluster
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
-        run: |
-          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ steps.determine_tag.outputs.tag}} --set=image.repository=${{ env.REGISTRY }}
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
+
+
+#       - name: Extract metadata (tags, labels) for Docker
+#         id: meta
+#         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+#         with:
+#           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#       - name: Determine Docker tag
+#         id: determine_tag
+#         run: |
+#           if [[ "${{ github.ref_name }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
+#             echo "::set-output name=tag::docker-${{ github.ref_name }}"
+#             echo "Using push tag version: ${{ github.ref_name }}"
+#           elif [[ "${{ github.event.inputs.version }}" =~ ${{ env.VERSION_EXPRESSION }} ]]; then
+#             echo "::set-output name=tag::docker-${{ github.event.inputs.version }}"
+#             echo "Using input version : ${{ github.event.inputs.version }}"
+#           else
+#             echo "Neither tag version nor input versions are available"
+#           fi
+
+#       - name: Build and push Docker image
+#         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+#         with:
+#           context: .
+#           push: true
+#           tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
+#           labels: ${{ steps.meta.outputs.labels }}
+
+#       - name: Update KubeConfig
+#         run: |
+#           aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region=${{ env.AWS_REGION }}
+
+#       - name: Deploy Helm Chart To Amazon EKS Cluster
+#         env:
+#           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#           IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.determine_tag.outputs.tag}}
+#         run: |
+#           helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ steps.determine_tag.outputs.tag}} --set=image.repository=${{ env.REGISTRY }}
 
