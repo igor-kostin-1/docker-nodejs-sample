@@ -82,11 +82,13 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         with:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
+            ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
             ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
             ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest
           labels: ${{ needs.extract-metadata.outputs.labels }}
