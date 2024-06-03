@@ -29,7 +29,6 @@ module "eks" {
     instance_type = ["t3.small"]
   }
 
-  
   eks_managed_node_groups = {
     general = {
       desired_size = 1 // desired number of nodes
