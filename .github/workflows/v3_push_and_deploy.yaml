@@ -60,7 +60,7 @@ jobs:
     needs: extract-metadata
     outputs:
       tag: ${{ needs.extract-metadata.outputs.tag }}
-      ecr_registry: ${{ steps.login-ecr.outputs.registry }}
+      ecr_registry: ${{ env.ECR_REGISTRY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -108,11 +108,11 @@ jobs:
             echo "::set-output name=run_jobs::false"
             exit 1
           elif contains("${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}", '.dkr.ecr.'); then
-            echo "Invalid image tag '${{ needs.build-push-image-to-ecr.outputs.tag }}'"
+            echo "Invalid image registry '${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
           elif contains("${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}", '.amazonaws.com'); then
-            echo "Invalid image tag '${{ needs.build-push-image-to-ecr.outputs.tag }}'"
+            echo "Invalid image registry '${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
           else
