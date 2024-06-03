@@ -60,7 +60,7 @@ jobs:
     needs: extract-metadata
     outputs:
       tag: ${{ needs.extract-metadata.outputs.tag }}
-      registry: ${{ steps.login-ecr.outputs.registry }}
+      ecr_registry: ${{ steps.login-ecr.outputs.registry }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -107,11 +107,11 @@ jobs:
             echo "Invalid image tag '${{ needs.build-push-image-to-ecr.outputs.tag }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
-          elif contains(${{ needs.build-push-image-to-ecr.outputs.registry }}, '.dkr.ecr.'); then
+          elif contains("${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}", '.dkr.ecr.'); then
             echo "Invalid image tag '${{ needs.build-push-image-to-ecr.outputs.tag }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
-          elif contains(${{ needs.build-push-image-to-ecr.outputs.registry }}, '.amazonaws.com'); then
+          elif contains("${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}", '.amazonaws.com'); then
             echo "Invalid image tag '${{ needs.build-push-image-to-ecr.outputs.tag }}'"
             echo "::set-output name=run_jobs::false"
             exit 1
@@ -140,4 +140,4 @@ jobs:
 
       - name: Deploy Helm Chart To Amazon EKS Cluster
         run: |
-          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.build-push-image-to-ecr.outputs.tag }} --set=image.repository=${{ needs.build-push-image-to-ecr.outputs.registry }}
+          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.build-push-image-to-ecr.outputs.tag }} --set=image.repository=${{ needs.build-push-image-to-ecr.outputs.ecr_registry }}
