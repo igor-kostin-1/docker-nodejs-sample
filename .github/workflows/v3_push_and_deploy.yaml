@@ -60,7 +60,7 @@ jobs:
     needs: extract-metadata
     outputs:
       tag: ${{ needs.extract-metadata.outputs.tag }}
-      ECR_REGISTRY: ${{ steps.encode_ecr_registry.outputs.encoded_registry }}
+      ECR_REGISTRY: ${{ env.encoded_registry }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
