@@ -92,30 +92,6 @@ jobs:
             ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
             ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest
           labels: ${{ needs.extract-metadata.outputs.labels }}
-#
-#  push-to-ghcr:
-#    runs-on: ubuntu-latest
-#    needs: extract-metadata
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#
-#      - name: Login to the Container registry
-#        uses: docker/login-action@v2
-#        with:
-#          registry: ${{ env.GHCR_REGISTRY }}
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GITHUB_TOKEN }}
-#
-#      - name: Build and push Docker image
-#        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-#        with:
-#          context: .
-#          push: true
-#          tags: |
-#            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ needs.extract-metadata.outputs.tag }}
-#            ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest
-#          labels: ${{ steps.meta.outputs.labels }}
 
   deploy-to-eks:
     runs-on: ubuntu-latest
