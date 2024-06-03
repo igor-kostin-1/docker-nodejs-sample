@@ -115,7 +115,5 @@ jobs:
           aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region=${{ env.AWS_REGION }}
 
       - name: Deploy Helm Chart To Amazon EKS Cluster
-        env:
-          ECR_REGISTRY: ${{ needs.build-push-image-to-ecr.outputs.registry }}
         run: |
-          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.build-push-image-to-ecr.outputs.tag }} --set=image.repository=${{ env.ECR_REGISTRY }}
+          helm upgrade --reuse-values -n vegait-training ${{ env.HELM_CHART_NAME }} kube/helm/app --set=image.tag=${{ needs.build-push-image-to-ecr.outputs.tag }} --set=image.repository=${{ needs.build-push-image-to-ecr.outputs.registry }}
