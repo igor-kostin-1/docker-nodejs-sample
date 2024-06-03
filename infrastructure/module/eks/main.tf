@@ -16,7 +16,7 @@ module "eks" {
   }
   create_iam_role = true
 
-  cluster_endpoint_public_access_cidrs = ["82.117.210.2/32"]
+  cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
 
   vpc_id                   = var.vpc_id
   subnet_ids               = var.node_subnets_id
