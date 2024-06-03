@@ -54,6 +54,7 @@ jobs:
             echo "Using input version: ${{ github.event.inputs.version }}"
           else
             echo "Neither tag version nor input versions are available"
+          fi
 
   build-push-image-to-ecr:
     runs-on: ubuntu-latest
